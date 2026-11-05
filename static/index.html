@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demolec — Media Converter</title>
+    <meta
+      name="description"
+      content="Paste a YouTube, SoundCloud, or Spotify link. Resolve playlists, pick tracks, download as MP3, WAV, or MP4."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css?v=4" />
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true">
+      <div class="orb orb-a"></div>
+      <div class="orb orb-b"></div>
+      <div class="grain"></div>
+    </div>
+
+    <main class="shell">
+      <header class="brand-block">
+        <p class="brand">Demolec</p>
+        <h1 class="headline">Pull any track.<br />Keep the file.</h1>
+        <p class="lede">
+          Paste a YouTube, SoundCloud, or Spotify link. Playlists resolve first
+          so you can pick tracks. Long sets can be trimmed to just the slice you
+          want. Downloads sit in a queue, so you can start the next one right away.
+        </p>
+      </header>
+
+      <section class="converter" aria-label="Converter">
+        <form id="convert-form" class="convert-form" autocomplete="off">
+          <label class="field">
+            <span class="field-label">Link</span>
+            <input
+              id="url-input"
+              name="url"
+              type="url"
+              required
+              placeholder="https://open.spotify.com/…  or  soundcloud.com/…  or  youtube.com/…"
+              spellcheck="false"
+            />
+          </label>
+
+          <fieldset class="formats">
+            <legend class="field-label">Format</legend>
+            <div class="format-row" role="radiogroup" aria-label="Output format">
+              <label class="format-option">
+                <input type="radio" name="format" value="mp3" checked />
+                <span>
+                  <strong>MP3</strong>
+                  <small>High-quality audio</small>
+                </span>
+              </label>
+              <label class="format-option">
+                <input type="radio" name="format" value="wav" />
+                <span>
+                  <strong>WAV</strong>
+                  <small>24-bit PCM · heavy OK</small>
+                </span>
+              </label>
+              <label class="format-option">
+                <input type="radio" name="format" value="mp4" />
+                <span>
+                  <strong>MP4</strong>
+                  <small>Video + audio</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="actions">
+            <button type="submit" id="submit-btn" class="cta">
+              Resolve link
+            </button>
+            <p class="sources">
+              <span>YouTube</span>
+              <span>SoundCloud</span>
+              <span>Spotify</span>
+            </p>
+          </div>
+        </form>
+
+        <div id="playlist-panel" class="playlist-panel" hidden>
+          <div class="playlist-head">
+            <div>
+              <p id="playlist-title" class="playlist-title">Playlist</p>
+              <p id="playlist-meta" class="playlist-meta"></p>
+            </div>
+            <div class="playlist-tools">
+              <button type="button" id="select-all-btn" class="ghost-btn">
+                Select all
+              </button>
+              <button type="button" id="select-none-btn" class="ghost-btn">
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <div id="track-list" class="track-list" role="list"></div>
+
+          <div class="playlist-actions">
+            <p id="selection-count" class="selection-count">0 selected</p>
+            <div class="playlist-buttons">
+              <button type="button" id="download-selected-btn" class="cta" disabled>
+                Add selected to queue
+              </button>
+              <button type="button" id="download-all-btn" class="cta cta-secondary">
+                Add all to queue
+              </button>
+            </div>
+            <p class="zip-hint">
+              Multiple tracks are packaged into a zip you can extract locally.
+              You can queue another playlist while this one downloads.
+            </p>
+          </div>
+        </div>
+        <p id="form-error" class="form-error" hidden></p>
+      </section>
+
+      <section class="converter" aria-label="Trim a set">
+        <div class="section-kicker">Long sets</div>
+        <h2 class="section-title">Trim a slice</h2>
+        <p class="section-copy">
+          Paste a SoundCloud or YouTube set. Drag the handles or type a start
+          and end — only that part is downloaded, in the format you pick here.
+        </p>
+        <form id="trim-form" class="convert-form" autocomplete="off">
+          <label class="field">
+            <span class="field-label">Set link</span>
+            <input
+              id="trim-url"
+              name="url"
+              type="url"
+              required
+              placeholder="https://soundcloud.com/…/sets/…  or a long YouTube video"
+              spellcheck="false"
+            />
+          </label>
+
+          <fieldset class="formats">
+            <legend class="field-label">Slice format</legend>
+            <div class="format-row" role="radiogroup" aria-label="Slice output format">
+              <label class="format-option">
+                <input type="radio" name="trim-format" value="mp3" checked />
+                <span>
+                  <strong>MP3</strong>
+                  <small>High-quality audio</small>
+                </span>
+              </label>
+              <label class="format-option">
+                <input type="radio" name="trim-format" value="wav" />
+                <span>
+                  <strong>WAV</strong>
+                  <small>24-bit PCM · heavy OK</small>
+                </span>
+              </label>
+              <label class="format-option">
+                <input type="radio" name="trim-format" value="mp4" />
+                <span>
+                  <strong>MP4</strong>
+                  <small>Video + audio</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="actions">
+            <button type="submit" id="trim-submit" class="cta">Load set</button>
+          </div>
+        </form>
+        <p id="trim-error" class="form-error" hidden></p>
+
+        <div id="trim-panel" class="trim-panel" hidden>
+          <div class="playlist-head">
+            <div>
+              <p id="trim-title" class="playlist-title">Set</p>
+              <p id="trim-meta" class="playlist-meta"></p>
+            </div>
+          </div>
+
+          <div id="trim-track-list" class="track-list trim-track-list" hidden></div>
+
+          <div class="trim-presets">
+            <button type="button" class="ghost-btn" data-preset="120">First 2 min</button>
+            <button type="button" class="ghost-btn" data-preset="300">First 5 min</button>
+            <button type="button" class="ghost-btn" data-preset="600">First 10 min</button>
+          </div>
+
+          <div class="trim-slider" id="trim-slider">
+            <div class="trim-rail"></div>
+            <div class="trim-fill" id="trim-fill"></div>
+            <input id="trim-start" type="range" min="0" max="120" step="1" value="0" aria-label="Start" />
+            <input id="trim-end" type="range" min="0" max="120" step="1" value="120" aria-label="End" />
+          </div>
+
+          <div class="trim-times">
+            <label>
+              <span class="field-label">From</span>
+              <input id="trim-from" type="text" inputmode="numeric" value="0:00" spellcheck="false" />
+            </label>
+            <label>
+              <span class="field-label">To</span>
+              <input id="trim-to" type="text" inputmode="numeric" value="2:00" spellcheck="false" />
+            </label>
+            <p id="trim-span" class="trim-span">2:00 selected</p>
+          </div>
+
+          <button type="button" id="trim-download" class="cta">
+            Download this part
+          </button>
+        </div>
+      </section>
+
+      <section id="queue-panel" class="converter queue-panel" hidden aria-label="Download queue">
+        <div class="playlist-head">
+          <div>
+            <div class="section-kicker">Queue</div>
+            <h2 class="section-title">Downloads</h2>
+          </div>
+          <button type="button" id="clear-queue" class="ghost-btn">Clear all</button>
+        </div>
+        <p class="section-copy">Several jobs can run at once. Finished ones stay until you clear them.</p>
+        <div id="queue-list" class="queue-list"></div>
+      </section>
+
+      <footer class="note">
+        Spotify links are matched to YouTube sources (Spotify audio is DRM-locked).
+        WAV uses 24-bit PCM from the best available source — files can be large.
+        Use this for media you have the right to download.
+      </footer>
+    </main>
+
+    <script src="/app.js?v=5"></script>
+  </body>
+</html>
